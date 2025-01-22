@@ -1,5 +1,5 @@
 #!/usr/bin/python
-# -*- coding:utf-8 -*-
+# -*- coding:utf-8 
 import sys
 import os
 import random
@@ -31,20 +31,20 @@ def draw_temperature_chart(epd, lab_temperatures, other_temperatures, timestamps
         draw = ImageDraw.Draw(Himage)
 
         # Font setup
-        font24 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 24)
-        font18 = ImageFont.truetype(os.path.join(picdir, 'Font.ttc'), 18)
+        font24 = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 24)
+        font18 = ImageFont.truetype('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf', 18)
 
         # Chart configurations
-        chart_width = 300
-        chart_height = 200
+        chart_width = 270
+        chart_height = 250
         chart_y_start = 60
-        chart_gap = 20
-        min_temp, max_temp = 5, 40
-        temp_step = 5
+        chart_gap = 50
+        min_temp, max_temp = 0, 60
+        temp_step = 10
 
         # Lab Temperature Chart
         lab_chart_x_start = 30
-        draw.text((lab_chart_x_start, 10), f"Lab Temperature: {lab_temperatures[-1]}°C", font=font24, fill=0)
+        draw.text((lab_chart_x_start, 10), f"Lab Temp.: {lab_temperatures[-1]}°C", font=font24, fill=0)
         draw.rectangle(
             (lab_chart_x_start, chart_y_start, lab_chart_x_start + chart_width, chart_y_start + chart_height),
             outline=0,
@@ -54,10 +54,10 @@ def draw_temperature_chart(epd, lab_temperatures, other_temperatures, timestamps
         for temp in range(min_temp, max_temp + 1, temp_step):
             y = map_temp_to_y(temp, chart_y_start, chart_height, min_temp, max_temp)
             draw.line((lab_chart_x_start, y, lab_chart_x_start + chart_width, y), fill=128, width=1)
-            draw.text((lab_chart_x_start - 30, y - 10), f"{temp}°C", font=font18, fill=0)
+            draw.text((lab_chart_x_start - 30, y - 10), f"{temp}", font=font18, fill=0)
 
         # X-axis timestamps and vertical gridlines
-        step_x = chart_width // max_data_points
+        step_x = chart_width // (max_data_points-1)
         for i, timestamp in enumerate(timestamps[-max_data_points:]):
             x = lab_chart_x_start + i * step_x
             draw.line((x, chart_y_start, x, chart_y_start + chart_height), fill=128, width=1)
@@ -65,7 +65,7 @@ def draw_temperature_chart(epd, lab_temperatures, other_temperatures, timestamps
 
         # Other Temperature Chart
         other_chart_x_start = lab_chart_x_start + chart_width + chart_gap
-        draw.text((other_chart_x_start, 10), f"Other Temperature: {other_temperatures[-1]}°C", font=font24, fill=0)
+        draw.text((other_chart_x_start, 10), f"Device Temp.: {other_temperatures[-1]}°C", font=font24, fill=0)
         draw.rectangle(
             (other_chart_x_start, chart_y_start, other_chart_x_start + chart_width, chart_y_start + chart_height),
             outline=0,
@@ -75,7 +75,7 @@ def draw_temperature_chart(epd, lab_temperatures, other_temperatures, timestamps
         for temp in range(min_temp, max_temp + 1, temp_step):
             y = map_temp_to_y(temp, chart_y_start, chart_height, min_temp, max_temp)
             draw.line((other_chart_x_start, y, other_chart_x_start + chart_width, y), fill=128, width=1)
-            draw.text((other_chart_x_start - 30, y - 10), f"{temp}°C", font=font18, fill=0)
+            draw.text((other_chart_x_start - 30, y - 10), f"{temp}", font=font18, fill=0)
 
         # X-axis timestamps and vertical gridlines
         for i, timestamp in enumerate(timestamps[-max_data_points:]):
